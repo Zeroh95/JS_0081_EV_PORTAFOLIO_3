@@ -4,10 +4,23 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .row {
     display: flex;
-    background-color: antiquewhite;
     column-gap:  16px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#agregarTarea {
+    width: 20rem;
+    background-color: #202020;
+    color: white;
 }
