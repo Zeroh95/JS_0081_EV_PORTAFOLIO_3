@@ -1,55 +1,63 @@
 
-let listaProductos = [];
-let listaProductosComprados = [];
 
-function agregarProducto(evento) {
-    // Prevenir el comportamiento por defecto del formulario
-    evento.preventDefault();
-    // Obtener el valor del input
-    console.log("Evento: ", evento);
-    let formulario = evento.target;
-    let producto = formulario.producto.value;
-    console.log("Producto: ", producto);
+let tareas = [];
 
-    /* CONDICIONES DE BORDE */
-    // TODO: Validar que el producto no esté vacío
+// Función para agregar una nueva tarea
+function agregarTarea() {
+  const input = document.getElementById("nuevaTarea");
+  const mensaje = document.getElementById("mensaje");
+  const textoTarea = input.value.trim();
 
-    listaProductos.push(producto);
+  if (textoTarea === "") {
+    mensaje.textContent = "⚠️ No puedes agregar una tarea vacía.";
+    return;
+  }
 
-    let listaProductosAgregados = document.getElementById("lista-productos-agregados");
-    listaProductosAgregados.innerHTML = ""; // Limpiar la lista antes de agregar los nuevos productos
-    listaProductos.forEach((producto, index) => {
-        let elemento =
-            `
-                <li>
-                    <input type="checkbox" name="producto${index}" id="producto${index}">
-                    <span>${producto}</span>
-                    <button onclick="eliminarProducto(${index})">Eliminar</button>
-                </li>
-            `;
-        listaProductosAgregados.innerHTML += elemento;
-    });
-    // Limpiar el input después de agregar el producto
-    formulario.producto.value = "";
+  mensaje.textContent = ""; // Limpiar mensaje
 
+  // Crear objeto tarea con ID único y fecha
+  const nuevaTarea = {
+    id: Math.floor(Math.random() * 1000000),
+    texto: textoTarea,
+    fecha: new Date().toLocaleString()
+  };
+
+  tareas.push(nuevaTarea);
+  input.value = "";
+  mostrarTareas();
 }
-function checkearProducto() {
 
+// Función para eliminar una tarea por su ID
+function eliminarTarea(id) {
+  tareas = tareas.filter(tarea => tarea.id !== id);
+  mostrarTareas();
 }
-function eliminarProducto(index) {
-    listaProductos.splice(index, 1);
-    // Actualizar la lista de productos agregados
-    let listaProductosAgregados = document.getElementById("lista-productos-agregados");
-    listaProductosAgregados.innerHTML = "";
-    listaProductos.forEach((producto, index) => {
-        let elemento =
-            `
-                <li>
-                    <input type="checkbox" name="producto${index}" id="producto${index}">
-                    <span>${producto}</span>
-                    <button onclick="eliminarProducto(${index})">Eliminar</button>
-                </li>
-            `;
-        listaProductosAgregados.innerHTML += elemento;
+
+// Función para mostrar todas las tareas
+function mostrarTareas() {
+  const lista = document.getElementById("listaTareas");
+  lista.innerHTML = "";
+
+  tareas.forEach(tarea => {
+    const li = document.createElement("li");
+
+    // Contenedor del texto
+    const spanTexto = document.createElement("span");
+    spanTexto.textContent = `${tarea.texto} (${tarea.fecha})`;
+
+    // Botón de eliminar
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "❌";
+    btnEliminar.classList.add("boton-eliminar");
+    btnEliminar.addEventListener("click", (e) => {
+      e.stopPropagation(); 
+      eliminarTarea(tarea.id);
     });
+
+    // Añadir elementos a la lista
+    li.appendChild(spanTexto);
+    li.appendChild(btnEliminar);
+
+    lista.appendChild(li);
+  });
 }
